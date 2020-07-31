@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markov decision processes (MDPs) &#8212; stormpy 1.6.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Continuous-time Markov chains (CTMCs)" href="building_ctmcs.html" />
+    <link rel="prev" title="Discrete-time Markov chains (DTMCs)" href="building_dtmcs.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Stormpy</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="http://stormchecker.org">Storm</a></li>
+                <li><a href="https://github.com/moves-rwth/stormpy">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Stormpy <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#installation-steps">Installation Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started.html#a-quick-tour-through-stormpy">A Quick Tour through Stormpy</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../advanced_topics.html">Advanced Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building_models.html">Building Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_dtmcs.html">Discrete-time Markov chains (DTMCs)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Markov decision processes (MDPs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_ctmcs.html">Continuous-time Markov chains (CTMCs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_mas.html">Markov automata (MAs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../engines.html">Engines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exploration.html">Exploring Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reward_models.html">Reward Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../schedulers.html">Working with Schedulers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shortest_paths.html">Working with Shortest Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parametric_models.html">Parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dfts.html">Dynamic Fault Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gspns.html">Generalized Stochastic Petri Nets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributors.html">Contributors</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/core.html">Stormpy.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/info.html">Stormpy.info</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/exceptions.html">Stormpy.exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/logic.html">Stormpy.logic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/storage.html">Stormpy.storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/utility.html">Stormpy.utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dft.html">Stormpy.dft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/gspn.html">Stormpy.gspn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/pars.html">Stormpy.pars</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Markov decision processes (MDPs)</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#transition-matrix">Transition Matrix</a></li>
+<li><a class="reference internal" href="#labeling">Labeling</a></li>
+<li><a class="reference internal" href="#reward-models">Reward models</a></li>
+<li><a class="reference internal" href="#building-the-model">Building the Model</a></li>
+<li><a class="reference internal" href="#partially-observable-markov-decision-process-pomdps">Partially observable Markov decision process (POMDPs)</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="building_dtmcs.html" title="Previous Chapter: Discrete-time Markov chains (DTMCs)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Discrete-time...</span>
+    </a>
+  </li>
+  <li>
+    <a href="building_ctmcs.html" title="Next Chapter: Continuous-time Markov chains (CTMCs)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Continuous-ti... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="markov-decision-processes-mdps">
+<h1>Markov decision processes (MDPs)<a class="headerlink" href="#markov-decision-processes-mdps" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>In <a class="reference internal" href="building_dtmcs.html"><span class="doc">Discrete-time Markov chains (DTMCs)</span></a> we modelled Knuth-Yao’s model of a fair die by the means of a DTMC.
+In the following we extend this model with nondeterministic choice by building a Markov decision process.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://github.com/moves-rwth/stormpy/blob/master/examples/building_mdps/01-building-mdps.py">01-building-mdps.py</a></p>
+</div>
+<p>First, we import Stormpy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">stormpy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transition-matrix">
+<h2>Transition Matrix<a class="headerlink" href="#transition-matrix" title="Permalink to this headline">¶</a></h2>
+<p>Since we want to build a nondeterminstic model, we create a transition matrix with a custom row group for each state:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">SparseMatrixBuilder</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_dimensions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">has_custom_row_grouping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">row_groups</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We need more than one row for the transitions starting in state 0 because a nondeterministic choice over the actions is available.
+Therefore, we start a new group that will contain the rows representing actions of state 0.
+Note that the row group needs to be added before any entries are added to the group:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, we have two nondeterministic choices in state 0.
+With choice <cite>0</cite> we have probability 0.5 to got to state 1 and probability 0.5 to got to state 2.
+With choice <cite>1</cite> we got to state 1 with probability 0.2 and go to state 2 with probability 0.8.</p>
+<p>For the remaining states, we need to specify the starting rows of each row group:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">builder</span><span class="o">.</span><span class="n">new_row_group</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we build the transition matrix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="labeling">
+<h2>Labeling<a class="headerlink" href="#labeling" title="Permalink to this headline">¶</a></h2>
+<p>We have seen the construction of a state labeling in previous examples. Therefore we omit the description here.</p>
+<p>Instead, we focus on the choices.
+Since in state 0 a nondeterministic choice over two actions is available, the number of choices is 14.
+To distinguish those we can define a choice labeling:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice_labeling</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">ChoiceLabeling</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">choice_labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">choice_labels</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">choice_labeling</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We assign the label ‘a’ to the first action of state 0 and ‘b’ to the second.
+Recall that those actions where defined in row one and two of the transition matrix respectively:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice_labeling</span><span class="o">.</span><span class="n">add_label_to_choice</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">choice_labeling</span><span class="o">.</span><span class="n">add_label_to_choice</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">choice_labeling</span><span class="p">)</span> 
+<span class="go">Choice 2 labels</span>
+<span class="go">   * a -&gt; 1 item(s)</span>
+<span class="go">   * b -&gt; 1 item(s)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reward-models">
+<h2>Reward models<a class="headerlink" href="#reward-models" title="Permalink to this headline">¶</a></h2>
+<p>In this reward model the length of the action rewards coincides with the number of choices:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reward_models</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action_reward</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reward_models</span><span class="p">[</span><span class="s1">&#39;coin_flips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">SparseRewardModel</span><span class="p">(</span><span class="n">optional_state_action_reward_vector</span><span class="o">=</span><span class="n">action_reward</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-the-model">
+<h2>Building the Model<a class="headerlink" href="#building-the-model" title="Permalink to this headline">¶</a></h2>
+<p>We collect the components:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">components</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">SparseModelComponents</span><span class="p">(</span><span class="n">transition_matrix</span><span class="o">=</span><span class="n">transition_matrix</span><span class="p">,</span> <span class="n">state_labeling</span><span class="o">=</span><span class="n">state_labeling</span><span class="p">,</span> <span class="n">reward_models</span><span class="o">=</span><span class="n">reward_models</span><span class="p">,</span> <span class="n">rate_transitions</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">components</span><span class="o">.</span><span class="n">choice_labeling</span> <span class="o">=</span> <span class="n">choice_labeling</span>
+</pre></div>
+</div>
+<p>We build the model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdp</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">SparseMdp</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdp</span><span class="p">)</span> 
+<span class="go">Model type:         MDP (sparse)</span>
+<span class="go">States:     13</span>
+<span class="go">Transitions:        22</span>
+<span class="go">Choices:    14</span>
+<span class="go">Reward Models:  coin_flips</span>
+<span class="go">State Labels:       9 labels</span>
+<span class="go">   * one -&gt; 1 item(s)</span>
+<span class="go">   * six -&gt; 1 item(s)</span>
+<span class="go">   * three -&gt; 1 item(s)</span>
+<span class="go">   * four -&gt; 1 item(s)</span>
+<span class="go">   * done -&gt; 6 item(s)</span>
+<span class="go">   * init -&gt; 1 item(s)</span>
+<span class="go">   * five -&gt; 1 item(s)</span>
+<span class="go">   * deadlock -&gt; 0 item(s)</span>
+<span class="go">   * two -&gt; 1 item(s)</span>
+<span class="go">Choice Labels:      2 labels</span>
+<span class="go">   * a -&gt; 1 item(s)</span>
+<span class="go">   * b -&gt; 1 item(s)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="partially-observable-markov-decision-process-pomdps">
+<h2>Partially observable Markov decision process (POMDPs)<a class="headerlink" href="#partially-observable-markov-decision-process-pomdps" title="Permalink to this headline">¶</a></h2>
+<p>To build a partially observable Markov decision process (POMDP),
+<cite>components.observations</cite> can be set to a list of numbers that defines the status of the observables in each state.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/doc/models/building_mdps.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016-2019 Moves RWTH Aachen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

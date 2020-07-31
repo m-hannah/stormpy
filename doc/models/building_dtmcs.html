@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete-time Markov chains (DTMCs) &#8212; stormpy 1.6.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Markov decision processes (MDPs)" href="building_mdps.html" />
+    <link rel="prev" title="Building Models" href="../building_models.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Stormpy</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.6.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="http://stormchecker.org">Storm</a></li>
+                <li><a href="https://github.com/moves-rwth/stormpy">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Stormpy <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#installation-steps">Installation Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started.html#a-quick-tour-through-stormpy">A Quick Tour through Stormpy</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../advanced_topics.html">Advanced Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building_models.html">Building Models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Discrete-time Markov chains (DTMCs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_mdps.html">Markov decision processes (MDPs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_ctmcs.html">Continuous-time Markov chains (CTMCs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_mas.html">Markov automata (MAs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../engines.html">Engines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exploration.html">Exploring Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reward_models.html">Reward Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../schedulers.html">Working with Schedulers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shortest_paths.html">Working with Shortest Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parametric_models.html">Parametric Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dfts.html">Dynamic Fault Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gspns.html">Generalized Stochastic Petri Nets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributors.html">Contributors</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/core.html">Stormpy.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/info.html">Stormpy.info</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/exceptions.html">Stormpy.exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/logic.html">Stormpy.logic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/storage.html">Stormpy.storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/utility.html">Stormpy.utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/dft.html">Stormpy.dft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/gspn.html">Stormpy.gspn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/pars.html">Stormpy.pars</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Discrete-time Markov chains (DTMCs)</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#transition-matrix">Transition Matrix</a></li>
+<li><a class="reference internal" href="#labeling">Labeling</a></li>
+<li><a class="reference internal" href="#reward-models">Reward Models</a></li>
+<li><a class="reference internal" href="#building-the-model">Building the Model</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="../building_models.html" title="Previous Chapter: Building Models"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Building Models</span>
+    </a>
+  </li>
+  <li>
+    <a href="building_mdps.html" title="Next Chapter: Markov decision processes (MDPs)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Markov decisi... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="discrete-time-markov-chains-dtmcs">
+<h1>Discrete-time Markov chains (DTMCs)<a class="headerlink" href="#discrete-time-markov-chains-dtmcs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>As described in <a class="reference internal" href="../../getting_started.html"><span class="doc">Getting Started</span></a>,
+Storm can be used to translate a model description e.g. in form of a prism file into a Markov chain.</p>
+<p>Here, we use Stormpy to create the components for a model and build a DTMC directly from these components without parsing a model description.
+We consider the previous example of the Knuth-Yao die.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://github.com/moves-rwth/stormpy/blob/master/examples/building_dtmcs/01-building-dtmcs.py">01-building-dtmcs.py</a></p>
+</div>
+<p>In the following we create the transition matrix, the state labeling and the reward models of a DTMC.
+First, we import stormpy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">stormpy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transition-matrix">
+<h2>Transition Matrix<a class="headerlink" href="#transition-matrix" title="Permalink to this headline">¶</a></h2>
+<p>We begin by creating the matrix representing the transitions in the model in terms of probabilities.
+For constructing the transition matrix, we use the SparseMatrixBuilder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">SparseMatrixBuilder</span><span class="p">(</span><span class="n">rows</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">entries</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">force_dimensions</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">has_custom_row_grouping</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, we start with an empty matrix to later insert more entries.
+If the number of rows, columns and entries is known, the matrix can be constructed using these values.</p>
+<p>For DTMCs each state has at most one outgoing probability distribution.
+Thus, we create a matrix with trivial row grouping where each group contains one row representing the state action.
+In <a class="reference internal" href="building_mdps.html"><span class="doc">Markov decision processes (MDPs)</span></a> we will revisit the example of the die, but extend the model with nondeterministic choice.</p>
+<p>We specify the transitions of the model by adding values to the matrix where the column represents the target state.
+All transitions are equipped with a probability defined by the value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lastly, we add a self-loop with probability one to the final states:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">13</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">builder</span><span class="o">.</span><span class="n">add_next_value</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can build the matrix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It should be noted that entries can only be inserted in ascending order, i.e. row by row and column by column.
+Stormpy provides the possibility to build a sparse matrix using the numpy library (<a class="reference external" href="https://numpy.org/">https://numpy.org/</a> )
+Instead of using the SparseMatrixBuilder, a sparse matrix can be build from a numpy array via the method <cite>stormpy.build_sparse_matrix</cite>.
+An example is given in <a class="reference internal" href="building_ctmcs.html#transition-matrix"><span class="std std-ref">building CTMCs</span></a>.</p>
+</div>
+<div class="section" id="labeling">
+<h2>Labeling<a class="headerlink" href="#labeling" title="Permalink to this headline">¶</a></h2>
+<p>States can be labeled with sets of propositions, for example state 0 can be labeled with “init”.
+In order to specify the state labeling we create an empty labeling for the given number of states and add the labels to the labeling:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">StateLabeling</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="s1">&#39;five&#39;</span><span class="p">,</span> <span class="s1">&#39;six&#39;</span><span class="p">,</span> <span class="s1">&#39;done&#39;</span><span class="p">,</span> <span class="s1">&#39;deadlock&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Labels can be asociated with states. As an example, we label the state 0 with “init”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">state_labeling</span><span class="o">.</span><span class="n">get_states</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">))</span>
+<span class="go">bit vector(1/13) [0 ]</span>
+</pre></div>
+</div>
+<p>Next, we set the associations between the remaining labels and states.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;five&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">add_label_to_state</span><span class="p">(</span><span class="s1">&#39;six&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To set the same label for multiple states, we can use a BitVector representation for the set of states:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">state_labeling</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">,</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">BitVector</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">state_labeling</span><span class="p">)</span> 
+<span class="go">9 labels</span>
+<span class="go">   * one -&gt; 1 item(s)</span>
+<span class="go">   * four -&gt; 1 item(s)</span>
+<span class="go">   * done -&gt; 6 item(s)</span>
+<span class="go">   * three -&gt; 1 item(s)</span>
+<span class="go">   * init -&gt; 1 item(s)</span>
+<span class="go">   * two -&gt; 1 item(s)</span>
+<span class="go">   * six -&gt; 1 item(s)</span>
+<span class="go">   * deadlock -&gt; 0 item(s)</span>
+<span class="go">   * five -&gt; 1 item(s)</span>
+</pre></div>
+</div>
+<p>Defining a choice labeling is possible in a similar way.</p>
+</div>
+<div class="section" id="reward-models">
+<h2>Reward Models<a class="headerlink" href="#reward-models" title="Permalink to this headline">¶</a></h2>
+<p>Stormpy supports multiple reward models such as state rewards, state-action rewards and as transition rewards.
+In this example, the actions of states which satisfy <cite>s&lt;7</cite> acquire a reward of 1.0.</p>
+<p>The state-action rewards are represented by a vector, which is associated to a reward model named “coin_flips”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">reward_models</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action_reward</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reward_models</span><span class="p">[</span><span class="s1">&#39;coin_flips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">SparseRewardModel</span><span class="p">(</span><span class="n">optional_state_action_reward_vector</span> <span class="o">=</span> <span class="n">action_reward</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-the-model">
+<h2>Building the Model<a class="headerlink" href="#building-the-model" title="Permalink to this headline">¶</a></h2>
+<p>Next, we collect all components:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">components</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">SparseModelComponents</span><span class="p">(</span><span class="n">transition_matrix</span><span class="o">=</span><span class="n">transition_matrix</span><span class="p">,</span> <span class="n">state_labeling</span><span class="o">=</span><span class="n">state_labeling</span><span class="p">,</span> <span class="n">reward_models</span><span class="o">=</span><span class="n">reward_models</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And finally, we can build the DTMC:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dtmc</span> <span class="o">=</span> <span class="n">stormpy</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">SparseDtmc</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dtmc</span><span class="p">)</span> 
+<span class="go">--------------------------------------------------------------</span>
+<span class="go">Model type:         DTMC (sparse)</span>
+<span class="go">States:     13</span>
+<span class="go">Transitions:        20</span>
+<span class="go">Reward Models:  coin_flips</span>
+<span class="go">State Labels:       9 labels</span>
+<span class="go">   * three -&gt; 1 item(s)</span>
+<span class="go">   * six -&gt; 1 item(s)</span>
+<span class="go">   * done -&gt; 6 item(s)</span>
+<span class="go">   * four -&gt; 1 item(s)</span>
+<span class="go">   * five -&gt; 1 item(s)</span>
+<span class="go">   * deadlock -&gt; 0 item(s)</span>
+<span class="go">   * init -&gt; 1 item(s)</span>
+<span class="go">   * two -&gt; 1 item(s)</span>
+<span class="go">   * one -&gt; 1 item(s)</span>
+<span class="go">Choice Labels:      none</span>
+<span class="go">--------------------------------------------------------------</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/doc/models/building_dtmcs.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016-2019 Moves RWTH Aachen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
